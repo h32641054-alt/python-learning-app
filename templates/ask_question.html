@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}Đặt câu hỏi{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>❓ Đặt câu hỏi</h2>
+    
+    <form method="POST">
+        <div class="mb-3">
+            <label class="form-label">Tiêu đề câu hỏi</label>
+            <input type="text" name="title" class="form-control" required placeholder="Ví dụ: Làm thế nào để tạo list trong Python?">
+        </div>
+        
+        <div class="mb-3">
+            <label class="form-label">Nội dung câu hỏi</label>
+            <textarea name="content" class="form-control" rows="8" required placeholder="Mô tả chi tiết câu hỏi của bạn..."></textarea>
+        </div>
+        
+        <button type="submit" class="btn btn-primary">Đăng câu hỏi</button>
+        <a href="{{ url_for('qa') }}" class="btn btn-secondary">Hủy</a>
+    </form>
+</div>
+{% endblock %}

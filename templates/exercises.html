@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{% block title %}Bài tập Python{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-8">
+            <h2>🎯 Bài tập Python</h2>
+            
+            <div class="row">
+                {% for lesson in lessons %}
+                <div class="col-md-6 mb-4">
+                    <div class="card {% if lesson[8] == 'pending' %}border-warning{% elif lesson[8] == 'rejected' %}border-danger{% endif %}">
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                {{ lesson[1] }}
+                                {% if lesson|length > 8 and lesson[8] == 'pending' %}<span class="badge bg-warning">Chờ duyệt</span>{% endif %}
+                                {% if lesson|length > 8 and lesson[8] == 'rejected' %}<span class="badge bg-danger">Bị từ chối</span>{% endif %}
+                            </h5>
+                            <p class="card-text">{{ lesson[2][:100] }}...</p>
+                            <small class="text-muted">Bởi {{ lesson[6] }} - {{ lesson[7][:10] }}</small>
+                            <br><br>
+                            <a href="{{ url_for('lesson_detail', lesson_id=lesson[0]) }}" class="btn btn-primary">Làm bài</a>
+                            
+                            {% if session.username == 'admin' and lesson|length > 8 and lesson[8] == 'pending' %}
+                            <a href="{{ url_for('approve_lesson', lesson_id=lesson[0]) }}" class="btn btn-success btn-sm ms-2">Duyệt</a>
+                            <a href="{{ url_for('reject_lesson', lesson_id=lesson[0]) }}" class="btn btn-danger btn-sm">Từ chối</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            {% if session.username == 'admin' %}
+            <div class="card mb-3">
+                <div class="card-header">
+                    <h6>🔧 Admin - Đăng bài tập</h6>
+                </div>
+                <div class="card-body">
+                    <a href="{{ url_for('admin_create_exercise') }}" class="btn btn-primary btn-sm">Tạo bài tập mới</a>
+                </div>
+            </div>
+            {% endif %}
+            
+            {% if session.username %}
+            <div class="card mb-3">
+                <div class="card-header">
+                    <h6>📝 Đóng góp bài tập</h6>
+                </div>
+                <div class="card-body">
+                    <a href="{{ url_for('contribute_exercise') }}" class="btn btn-success btn-sm">Đóng góp bài tập</a>
+                </div>
+            </div>
+            {% endif %}
+            
+            {% if session.username == 'admin' %}
+            <div class="card">
+                <div class="card-header">
+                    <h6>👀 Xem đóng góp</h6>
+                </div>
+                <div class="card-body">
+                    <a href="{{ url_for('review_exercise_contributions') }}" class="btn btn-warning btn-sm">Xem đóng góp bài tập</a>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

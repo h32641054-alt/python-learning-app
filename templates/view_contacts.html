@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title %}Xem liên hệ{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>📧 Tin nhắn liên hệ</h2>
+    
+    {% for contact in contacts %}
+    <div class="card mb-3">
+        <div class="card-body">
+            <div class="d-flex justify-content-between align-items-start">
+                <div>
+                    <h5 class="card-title">{{ contact[2] }}</h5>
+                    <p class="card-text">{{ contact[3] }}</p>
+                    <small class="text-muted">
+                        Từ <strong>{{ contact[1] }}</strong> • {{ contact[4][:16] }}
+                    </small>
+                </div>
+                <a href="{{ url_for('delete_contact', contact_id=contact[0]) }}" class="btn btn-danger btn-sm" onclick="return confirm('Bạn có chắc muốn xóa tin nhắn này?')">Xóa</a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+    
+    <a href="{{ url_for('lessons') }}" class="btn btn-secondary">Quay lại</a>
+</div>
+{% endblock %}

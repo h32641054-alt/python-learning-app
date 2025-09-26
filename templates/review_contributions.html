@@ -1,0 +1,142 @@
+{% extends "base.html" %}
+
+{% block title %}Xem xét đóng góp - Admin Panel{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header bg-warning text-dark">
+                <h3>🔍 Xem xét đóng góp khóa học</h3>
+                <p class="mb-0">Duyệt các khóa học do người dùng đóng góp</p>
+            </div>
+            <div class="card-body">
+                {% if contributions %}
+                    <div class="row">
+                        {% for contribution in contributions %}
+                        <div class="col-lg-6 mb-4">
+                            <div class="card border-warning">
+                                <div class="card-header d-flex justify-content-between align-items-center">
+                                    <h5 class="mb-0">{{ contribution[1] }}</h5>
+                                    <span class="badge bg-warning text-dark">Chờ duyệt</span>
+                                </div>
+                                <div class="card-body">
+                                    <div class="mb-3">
+                                        <strong>👤 Tác giả:</strong> {{ contribution[4] }}
+                                    </div>
+                                    <div class="mb-3">
+                                        <strong>📅 Ngày gửi:</strong> {{ contribution[5][:19] }}
+                                    </div>
+                                    {% if contribution[3] %}
+                                    <div class="mb-3">
+                                        <strong>🎥 Video:</strong> 
+                                        <a href="{{ contribution[3] }}" target="_blank" class="btn btn-sm btn-outline-primary">Xem video</a>
+                                    </div>
+                                    {% endif %}
+                                    <div class="mb-3">
+                                        <strong>📝 Nội dung:</strong>
+                                        <div class="border rounded p-3 mt-2" style="max-height: 200px; overflow-y: auto; background-color: #f8f9fa;">
+                                            {{ contribution[2][:500] }}{% if contribution[2]|length > 500 %}...{% endif %}
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Preview Button -->
+                                    <button class="btn btn-info btn-sm mb-3" onclick="showPreview({{ contribution[0] }})">
+                                        👁️ Xem trước đầy đủ
+                                    </button>
+                                    
+                                    <div class="d-flex gap-2">
+                                        <a href="{{ url_for('approve_contribution', contribution_id=contribution[0]) }}" 
+                                           class="btn btn-success flex-fill"
+                                           onclick="return confirm('Bạn có chắc muốn duyệt khóa học này?')">
+                                            ✅ Duyệt & Đăng
+                                        </a>
+                                        <a href="{{ url_for('reject_contribution', contribution_id=contribution[0]) }}" 
+                                           class="btn btn-danger flex-fill"
+                                           onclick="return confirm('Bạn có chắc muốn từ chối khóa học này?')">
+                                            ❌ Từ chối
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="text-center py-5">
+                        <h4>📭 Không có đóng góp nào đang chờ duyệt</h4>
+                        <p class="text-muted">Tất cả đóng góp đã được xử lý.</p>
+                        <a href="{{ url_for('admin') }}" class="btn btn-primary">← Quay lại Admin Panel</a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Preview Modal -->
+<div class="modal fade" id="previewModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">👁️ Xem trước khóa học</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" id="previewContent">
+                <!-- Content will be loaded here -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+const contributions = {{ contributions|tojson if contributions else '[]' }};
+
+function showPreview(contributionId) {
+    const contribution = contributions.find(c => c[0] === contributionId);
+    if (!contribution) return;
+    
+    const previewContent = document.getElementById('previewContent');
+    previewContent.innerHTML = `
+        <div class="mb-3">
+            <h4>${contribution[1]}</h4>
+            <div class="text-muted mb-2">
+                <strong>Tác giả:</strong> ${contribution[4]} | 
+                <strong>Ngày:</strong> ${contribution[5].substring(0, 19)}
+            </div>
+        </div>
+        
+        ${contribution[3] ? `
+        <div class="mb-3">
+            <h6>🎥 Video:</h6>
+            <div class="ratio ratio-16x9">
+                <iframe src="${contribution[3]}" allowfullscreen></iframe>
+            </div>
+        </div>
+        ` : ''}
+        
+        <div class="mb-3">
+            <h6>📝 Nội dung đầy đủ:</h6>
+            <div class="border rounded p-3" style="background-color: #f8f9fa; white-space: pre-wrap;">
+${contribution[2]}
+            </div>
+        </div>
+    `;
+    
+    const modal = new bootstrap.Modal(document.getElementById('previewModal'));
+    modal.show();
+}
+
+// Auto-refresh every 30 seconds
+setInterval(() => {
+    if (document.visibilityState === 'visible') {
+        location.reload();
+    }
+}, 30000);
+</script>
+{% endblock %}

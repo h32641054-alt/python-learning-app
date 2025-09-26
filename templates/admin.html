@@ -1,0 +1,128 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Panel - Python Learning{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <h1 class="mb-4">🔧 Admin Panel</h1>
+        <p class="lead">Quản lý nội dung Python Learning</p>
+        
+        <div class="alert alert-info">
+            <h6>📋 Nhiệm vụ Admin:</h6>
+            <ul class="mb-0">
+                <li>Tạo và quản lý khóa học, blog, bài tập</li>
+                <li>Xem xét và duyệt đóng góp từ người dùng</li>
+                <li>Theo dõi thống kê hệ thống</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-4 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h4>📚 Tạo khóa học</h4>
+            </div>
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('create_course') }}">
+                    <div class="mb-3">
+                        <input type="text" class="form-control" name="title" placeholder="Tiêu đề khóa học" required>
+                    </div>
+                    <div class="mb-3">
+                        <textarea class="form-control" name="content" rows="4" placeholder="Nội dung khóa học" required></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <input type="url" class="form-control" name="video_url" placeholder="Link video YouTube (tùy chọn)">
+                        <small class="text-muted">Ví dụ: https://www.youtube.com/embed/VIDEO_ID</small>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Tạo khóa học</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h4>📝 Tạo blog</h4>
+            </div>
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('create_blog') }}">
+                    <div class="mb-3">
+                        <input type="text" class="form-control" name="title" placeholder="Tiêu đề bài viết" required>
+                    </div>
+                    <div class="mb-3">
+                        <textarea class="form-control" name="content" rows="6" placeholder="Nội dung bài viết" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-success w-100">Đăng blog</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h4>🎯 Tạo bài tập</h4>
+            </div>
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('create_exercise') }}">
+                    <div class="mb-3">
+                        <input type="text" class="form-control" name="title" placeholder="Tiêu đề bài tập" required>
+                    </div>
+                    <div class="mb-3">
+                        <textarea class="form-control" name="content" rows="6" placeholder="Mô tả bài tập và yêu cầu" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-warning w-100">Tạo bài tập</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6 mb-4">
+        <div class="card">
+            <div class="card-header bg-warning text-dark">
+                <h4>🔍 Xem xét đóng góp</h4>
+            </div>
+            <div class="card-body">
+                <p>Duyệt các khóa học do người dùng đóng góp</p>
+                <a href="{{ url_for('review_contributions') }}" class="btn btn-warning w-100">
+                    📋 Xem đóng góp chờ duyệt
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h4>📊 Thống kê</h4>
+            </div>
+            <div class="card-body">
+                <div class="row text-center">
+                    <div class="col-6">
+                        <h4 class="text-primary">{{ stats.users if stats else 0 }}</h4>
+                        <p>Người dùng</p>
+                    </div>
+                    <div class="col-6">
+                        <h4 class="text-success">{{ stats.questions if stats else 0 }}</h4>
+                        <p>Câu hỏi</p>
+                    </div>
+                    <div class="col-6">
+                        <h4 class="text-info">{{ stats.courses if stats else 0 }}</h4>
+                        <p>Khóa học</p>
+                    </div>
+                    <div class="col-6">
+                        <h4 class="text-warning">{{ stats.blogs if stats else 0 }}</h4>
+                        <p>Bài viết</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

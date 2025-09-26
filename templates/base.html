@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Python Learning - Học Python Miễn Phí{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism.min.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="{{ url_for('home') }}">🐍 Python Learning</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item me-3">
+                        <a class="nav-link nav-btn" href="{{ url_for('home') }}">🏠 Trang chủ</a>
+                    </li>
+                    <li class="nav-item me-3">
+                        <a class="nav-link nav-btn" href="{{ url_for('lessons') }}">📚 Khóa học + Bài tập</a>
+                    </li>
+                    <li class="nav-item me-3">
+                        <a class="nav-link nav-btn" href="{{ url_for('code_editor') }}">💻 Code</a>
+                    </li>
+                    <li class="nav-item dropdown me-3">
+                        <a class="nav-link dropdown-toggle nav-btn-premium" href="#" id="premiumDropdown" role="button" data-bs-toggle="dropdown">
+                            ✨ Premium {% if not session.username %}<span class="badge bg-warning text-dark ms-1">Pro</span>{% endif %}
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="{{ url_for('qa') }}">
+                                ❓ Hỏi đáp {% if not session.username %}<span class="badge bg-warning text-dark ms-2">Pro</span>{% endif %}
+                            </a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('contact') }}">
+                                📧 Liên hệ {% if not session.username %}<span class="badge bg-warning text-dark ms-2">Pro</span>{% endif %}
+                            </a></li>
+                        </ul>
+                    </li>
+                </ul>
+                <ul class="navbar-nav">
+                    {% if session.username %}
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle user-menu" href="#" role="button" data-bs-toggle="dropdown">
+                                👤 {{ session.username }}
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end">
+
+                                <li><a class="dropdown-item" href="{{ url_for('profile') }}">📄 Hồ sơ</a></li>
+                                <li><a class="dropdown-item" href="{{ url_for('logout') }}">🚀 Đăng xuất</a></li>
+                            </ul>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link join-btn" href="{{ url_for('auth') }}">🌟 Tham gia</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container mt-4">
+        <!-- Success Animation -->
+        <div id="success-animation" class="success-overlay" style="display: none;">
+            <div class="success-content">
+                <div class="fireworks-container">
+                    <div class="firework" style="--x: 20%; --y: 30%;"></div>
+                    <div class="firework" style="--x: 80%; --y: 20%;"></div>
+                    <div class="firework" style="--x: 50%; --y: 40%;"></div>
+                    <div class="firework" style="--x: 30%; --y: 60%;"></div>
+                    <div class="firework" style="--x: 70%; --y: 70%;"></div>
+                </div>
+                <div class="success-message">
+                    <div class="celebration-icons">
+                        🎉 🎆 🎇 🎉 🎆 🎉
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-success alert-dismissible fade show" role="alert" id="flash-message">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                    <script>
+                        if ('{{ message }}'.includes('thành công')) {
+                            showSuccessAnimation('{{ message }}');
+                        }
+                    </script>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Nút AI góc phải -->
+    <div id="ai-button" style="position: fixed; bottom: 20px; right: 20px; z-index: 1000;">
+        <button class="btn btn-primary btn-lg rounded-circle" onclick="toggleAI()" style="width: 60px; height: 60px;">
+            🤖
+        </button>
+    </div>
+    
+    <!-- Chat AI -->
+    <div id="ai-chat" style="position: fixed; bottom: 90px; right: 20px; width: 350px; height: 400px; background: white; border: 1px solid #ddd; border-radius: 10px; display: none; z-index: 1000; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
+        <div style="background: #007bff; color: white; padding: 10px; border-radius: 10px 10px 0 0;">
+            <strong>🤖 AI Python</strong>
+            <button onclick="toggleAI()" style="float: right; background: none; border: none; color: white; font-size: 18px;">×</button>
+        </div>
+        <div id="chat-messages" style="height: 300px; overflow-y: auto; padding: 10px;"></div>
+        <div style="padding: 10px; border-top: 1px solid #eee;">
+            <input type="text" id="chat-input" placeholder="Hỏi về Python..." style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 5px;" onkeypress="if(event.key==='Enter') sendMessage()">
+        </div>
+    </div>
+
+    <footer class="bg-dark text-light mt-5 py-4">
+        <div class="container text-center">
+            <p class="mb-0"><strong>Võ Sinh Hùng</strong></p>
+            <p class="mb-0"><strong>Lớp 9/2</strong></p>
+            <p class="mb-0"><strong>Trường Trung Học Cơ Sở Phú Đức</strong></p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/plugins/autoloader/prism-autoloader.min.js"></script>
+    
+    <script>
+    function showSuccessAnimation(message) {
+        const overlay = document.getElementById('success-animation');
+        overlay.style.display = 'flex';
+        
+        const fireworks = document.querySelectorAll('.firework');
+        fireworks.forEach((fw, index) => {
+            setTimeout(() => {
+                fw.style.animation = 'fireworkExplode 1.5s ease-out';
+            }, index * 300);
+        });
+        
+        setTimeout(() => {
+            overlay.style.display = 'none';
+            const flashMessage = document.getElementById('flash-message');
+            if (flashMessage) {
+                flashMessage.style.display = 'none';
+            }
+        }, 3000);
+    }
+    
+    function toggleAI() {
+        const chat = document.getElementById('ai-chat');
+        chat.style.display = chat.style.display === 'none' ? 'block' : 'none';
+    }
+    
+    function sendMessage() {
+        const input = document.getElementById('chat-input');
+        const messages = document.getElementById('chat-messages');
+        const message = input.value.trim();
+        
+        if (!message) return;
+        
+        messages.innerHTML += `<div style="margin-bottom: 10px; color: black;"><strong>Bạn:</strong> ${message}</div>`;
+        input.value = '';
+        
+        fetch('/chat', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({message: message})
+        })
+        .then(response => response.json())
+        .then(data => {
+            const response = data.response.replace(/\n/g, '<br>');
+            messages.innerHTML += `<div style="margin-bottom: 10px; background: #f8f9fa; padding: 8px; border-radius: 5px; color: black;"><strong>AI:</strong> ${response}</div>`;
+            messages.scrollTop = messages.scrollHeight;
+        });
+    }
+    </script>
+    
+    {% block scripts %}{% endblock %}
+</body>
+</html>

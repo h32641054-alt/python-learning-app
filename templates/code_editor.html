@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+
+{% block title %}Code Editor{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>💻 Code Editor Python</h2>
+    
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h6>Code của bạn</h6>
+                </div>
+                <div class="card-body">
+                    <textarea id="code-input" class="form-control" rows="15" placeholder="# Viết code Python ở đây..."></textarea>
+                    <br>
+                    <button class="btn btn-success" onclick="runCode()">▶ Chạy code</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h6>Kết quả</h6>
+                </div>
+                <div class="card-body">
+                    <div id="output" style="background: #f8f9fa; padding: 10px; min-height: 300px; color: black; border: 1px solid #ddd; border-radius: 5px; font-family: monospace; white-space: pre-wrap;"></div>
+                    <input type="text" id="user-input" class="form-control mt-2" placeholder="Nhập dữ liệu..." style="display: none;" onkeypress="if(event.key==='Enter') sendInput()">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+let waitingForInput = false;
+let currentCode = '';
+
+function runCode() {
+    const code = document.getElementById('code-input').value;
+    currentCode = code;
+    document.getElementById('output').textContent = 'Chạy...';
+    document.getElementById('user-input').style.display = 'none';
+    waitingForInput = false;
+    
+    fetch('/run_code', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({code: code})
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            document.getElementById('output').textContent = data.output;
+            if (data.waiting_input) {
+                document.getElementById('user-input').style.display = 'block';
+                document.getElementById('user-input').focus();
+                waitingForInput = true;
+            }
+        } else {
+            document.getElementById('output').textContent = 'Lỗi: ' + data.error;
+        }
+    });
+}
+
+function sendInput() {
+    if (!waitingForInput) return;
+    
+    const userInput = document.getElementById('user-input').value;
+    document.getElementById('user-input').value = '';
+    document.getElementById('user-input').style.display = 'none';
+    waitingForInput = false;
+    
+    fetch('/send_input', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({input: userInput})
+    })
+    .then(response => response.json())
+    .then(data => {
+        document.getElementById('output').textContent += '\n' + userInput + '\n' + data.output;
+        if (data.waiting_input) {
+            document.getElementById('user-input').style.display = 'block';
+            document.getElementById('user-input').focus();
+            waitingForInput = true;
+        }
+    });
+}
+</script>
+{% endblock %}

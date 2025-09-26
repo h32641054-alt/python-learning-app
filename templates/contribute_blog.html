@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}Đóng góp blog{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>📝 Đóng góp blog</h2>
+    
+    <form method="POST">
+        <div class="mb-3">
+            <label class="form-label">Tiêu đề blog</label>
+            <input type="text" name="title" class="form-control" required>
+        </div>
+        
+        <div class="mb-3">
+            <label class="form-label">Nội dung</label>
+            <textarea name="content" class="form-control" rows="10" required></textarea>
+        </div>
+        
+        <button type="submit" class="btn btn-success">Gửi đóng góp</button>
+        <a href="{{ url_for('blog') }}" class="btn btn-secondary">Hủy</a>
+    </form>
+</div>
+{% endblock %}

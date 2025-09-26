@@ -1,0 +1,280 @@
+{% extends "base.html" %}
+
+{% block title %}Đăng nhập / Đăng ký - Python Learning{% endblock %}
+
+{% block content %}
+<div class="auth-container">
+    <div class="space-background">
+        <div class="stars"></div>
+        <div class="planets"></div>
+        <div class="meteors"></div>
+        <div class="ufo"></div>
+    </div>
+    
+    <div class="row justify-content-center">
+        <div class="col-12">
+            <div class="auth-card">
+                <div class="row g-0">
+                    <!-- Đăng nhập -->
+                    <div class="col-md-6 login-section">
+                        <div class="auth-form-container">
+                            <h2 class="text-center mb-5">🚀 Đăng nhập vào vũ trụ</h2>
+                            <form method="POST" id="loginForm">
+                                <input type="hidden" name="action" value="login">
+                                <div class="mb-4">
+                                    <label class="form-label fs-5">Tên đăng nhập</label>
+                                    <input type="text" class="form-control form-control-lg" name="username" placeholder="Nhập tên đăng nhập" required>
+                                </div>
+                                <div class="mb-4">
+                                    <label class="form-label fs-5">Mật khẩu</label>
+                                    <input type="password" class="form-control form-control-lg" name="password" placeholder="Nhập mật khẩu" required>
+                                </div>
+                                <button type="submit" class="btn btn-primary btn-lg w-100 mb-3">🚀 Đăng nhập</button>
+                            </form>
+                            <div class="text-center">
+                                <div class="admin-info">
+                                    <small class="text-warning">🔑</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Đăng ký -->
+                    <div class="col-md-6 register-section">
+                        <div class="auth-form-container">
+                            <h2 class="text-center mb-5">🌟 Đăng ký tham gia vũ trụ Python - Lần đầu -</h2>
+                            <form method="POST" id="registerForm">
+                                <input type="hidden" name="action" value="register">
+                                <div class="mb-4">
+                                    <label class="form-label fs-5">Tên đăng nhập</label>
+                                    <input type="text" class="form-control form-control-lg" name="username" placeholder="Chọn tên đăng nhập" required>
+                                </div>
+                                <div class="mb-4">
+                                    <label class="form-label fs-5">Mật khẩu</label>
+                                    <input type="password" class="form-control form-control-lg" name="password" placeholder="Tạo mật khẩu mạnh" required>
+                                </div>
+                                <button type="submit" class="btn btn-success btn-lg w-100 mb-3">🌟 Đăng ký ngay</button>
+                            </form>
+                            <div class="text-center">
+                                <div class="free-info">
+                                    <small class="text-success">✨ Hoàn toàn miễn phí</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<style>
+.auth-container {
+    min-height: 80vh;
+    position: relative;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+}
+
+.space-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #0c0c0c 0%, #1a1a2e 50%, #16213e 100%);
+    z-index: -1;
+}
+
+.stars {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        radial-gradient(2px 2px at 20px 30px, #eee, transparent),
+        radial-gradient(2px 2px at 40px 70px, rgba(255,255,255,0.8), transparent),
+        radial-gradient(1px 1px at 90px 40px, #fff, transparent),
+        radial-gradient(1px 1px at 130px 80px, rgba(255,255,255,0.6), transparent),
+        radial-gradient(2px 2px at 160px 30px, #ddd, transparent);
+    background-repeat: repeat;
+    background-size: 200px 100px;
+    animation: sparkle 3s linear infinite;
+}
+
+@keyframes sparkle {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+.planets {
+    position: absolute;
+    width: 100px;
+    height: 100px;
+    top: 20%;
+    right: 10%;
+    background: radial-gradient(circle at 30% 30%, #ff6b35, #f39c12, #e67e22);
+    border-radius: 50%;
+    box-shadow: 0 0 50px rgba(255, 107, 53, 0.3);
+    animation: float 6s ease-in-out infinite;
+}
+
+.planets::before {
+    content: '';
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    top: -30px;
+    left: -80px;
+    background: radial-gradient(circle at 40% 40%, #3498db, #2980b9);
+    border-radius: 50%;
+    box-shadow: 0 0 30px rgba(52, 152, 219, 0.4);
+    animation: orbit 8s linear infinite;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    50% { transform: translateY(-20px) rotate(180deg); }
+}
+
+@keyframes orbit {
+    0% { transform: rotate(0deg) translateX(100px) rotate(0deg); }
+    100% { transform: rotate(360deg) translateX(100px) rotate(-360deg); }
+}
+
+.meteors {
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    top: 10%;
+    left: 80%;
+    background: #fff;
+    border-radius: 50%;
+    box-shadow: 0 0 10px #fff, -100px 0 20px #fff, -200px 0 30px rgba(255,255,255,0.5);
+    animation: meteor 4s linear infinite;
+}
+
+@keyframes meteor {
+    0% { 
+        transform: translateX(0) translateY(0) rotate(-45deg);
+        opacity: 1;
+    }
+    100% { 
+        transform: translateX(-500px) translateY(300px) rotate(-45deg);
+        opacity: 0;
+    }
+}
+
+.ufo {
+    position: absolute;
+    width: 80px;
+    height: 40px;
+    top: 60%;
+    left: 5%;
+    background: linear-gradient(ellipse, #34495e, #2c3e50);
+    border-radius: 50px 50px 20px 20px;
+    animation: ufoFloat 5s ease-in-out infinite;
+}
+
+.ufo::before {
+    content: '';
+    position: absolute;
+    width: 60px;
+    height: 20px;
+    top: -10px;
+    left: 10px;
+    background: radial-gradient(ellipse, rgba(52, 152, 219, 0.8), transparent);
+    border-radius: 50%;
+    animation: ufoGlow 2s ease-in-out infinite alternate;
+}
+
+@keyframes ufoFloat {
+    0%, 100% { transform: translateX(0) translateY(0); }
+    25% { transform: translateX(20px) translateY(-10px); }
+    50% { transform: translateX(40px) translateY(5px); }
+    75% { transform: translateX(20px) translateY(-5px); }
+}
+
+@keyframes ufoGlow {
+    0% { opacity: 0.3; }
+    100% { opacity: 0.8; }
+}
+
+.auth-card {
+    background: rgba(22, 33, 62, 0.95);
+    border-radius: 25px;
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(15px);
+    border: 2px solid rgba(255, 212, 59, 0.3);
+    overflow: hidden;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.login-section {
+    background: linear-gradient(135deg, rgba(48, 105, 152, 0.1), rgba(13, 17, 23, 0.8));
+    border-right: 1px solid rgba(255, 212, 59, 0.2);
+}
+
+.register-section {
+    background: linear-gradient(135deg, rgba(255, 212, 59, 0.1), rgba(13, 17, 23, 0.8));
+}
+
+.auth-form-container {
+    padding: 4rem 3rem;
+    color: white;
+    min-height: 600px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.form-control {
+    background: rgba(255, 255, 255, 0.15);
+    border: 2px solid rgba(255, 212, 59, 0.4);
+    color: white;
+    border-radius: 15px;
+    padding: 15px 20px;
+    font-size: 1.1rem;
+}
+
+.form-control-lg {
+    padding: 20px 25px;
+    font-size: 1.2rem;
+}
+
+.form-control:focus {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: var(--python-yellow);
+    box-shadow: 0 0 25px rgba(255, 212, 59, 0.5);
+    color: white;
+}
+
+.form-control::placeholder {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.admin-info, .free-info {
+    background: rgba(0, 0, 0, 0.3);
+    padding: 10px 15px;
+    border-radius: 10px;
+    border: 1px solid rgba(255, 212, 59, 0.2);
+}
+
+.btn {
+    border-radius: 25px;
+    padding: 15px 25px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: 1.1rem;
+}
+
+.btn-lg {
+    padding: 20px 30px;
+    font-size: 1.2rem;
+}
+</style>
+{% endblock %}

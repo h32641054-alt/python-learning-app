@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block title %}Liên hệ - Python Learning{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8 mx-auto">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="text-center">📞 Liên hệ với ADMIN</h1>
+            {% if session.username == 'admin' %}
+            <a href="{{ url_for('view_contacts') }}" class="btn btn-info">Xem tin nhắn liên hệ</a>
+            {% endif %}
+        </div>
+        
+        <div class="card">
+            <div class="card-body">
+                <form method="POST">
+                    <div class="mb-3">
+                        <label class="form-label">Tên người dùng: <strong>{{ session.username }}</strong></label>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="subject" class="form-label">Chủ đề</label>
+                        <select class="form-select" id="subject" name="subject" required>
+                            <option value="">Chọn chủ đề</option>
+                            <option value="support">Hỗ trợ kỹ thuật</option>
+                            <option value="feedback">Góp ý</option>
+                            <option value="bug">Báo lỗi</option>
+                            <option value="other">Khác</option>
+                        </select>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="message" class="form-label">Tin nhắn *</label>
+                        <textarea class="form-control" id="message" name="message" rows="6" required 
+                                  placeholder="Viết tin nhắn của bạn..."></textarea>
+                    </div>
+                    
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-primary btn-lg">Gửi tin nhắn</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

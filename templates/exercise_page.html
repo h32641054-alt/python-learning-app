@@ -1,0 +1,123 @@
+{% extends "base.html" %}
+
+{% block title %}Bài tập - {{ lesson[1] }}{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>🎯 Bài tập: {{ lesson[1] }}</h2>
+    <a href="{{ url_for('lesson_detail', lesson_id=lesson[0]) }}" class="btn btn-secondary mb-4">← Quay lại khóa học</a>
+    
+    <div class="row">
+        <div class="col-md-8">
+            <!-- Bài tập -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5>📝 Đề bài</h5>
+                </div>
+                <div class="card-body">
+                    <p>{{ lesson[4] }}</p>
+                </div>
+            </div>
+            
+            <!-- Code editor -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5>💻 Viết code</h5>
+                </div>
+                <div class="card-body">
+                    <textarea id="exercise-code" class="form-control" rows="8" placeholder="# Viết code của bạn ở đây..."></textarea>
+                    <br>
+                    <button class="btn btn-primary" onclick="runExercise()">▶ Chạy thử</button>
+                    <button class="btn btn-info ms-2" onclick="showHint()">💡 Xem gợi ý</button>
+                    <button class="btn btn-warning ms-2" onclick="showSolution()">🔑 Xem lời giải</button>
+                </div>
+            </div>
+            
+            <!-- Gợi ý -->
+            <div id="hint-section" class="card mb-4" style="display: none;">
+                <div class="card-header">
+                    <h5>💡 Gợi ý</h5>
+                </div>
+                <div class="card-body">
+                    <p id="hint-text"></p>
+                    <button class="btn btn-secondary" onclick="hideHint()">Ẩn gợi ý</button>
+                </div>
+            </div>
+            
+            <!-- Lời giải -->
+            <div id="solution-section" class="card mb-4" style="display: none;">
+                <div class="card-header">
+                    <h5>🔑 Lời giải</h5>
+                </div>
+                <div class="card-body">
+                    <pre id="solution-code" style="background: #f8f9fa; padding: 10px; color: black;"></pre>
+                    <button class="btn btn-secondary" onclick="hideSolution()">Ẩn lời giải</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <!-- Kết quả -->
+            <div class="card">
+                <div class="card-header">
+                    <h6>📊 Kết quả</h6>
+                </div>
+                <div class="card-body">
+                    <pre id="output" style="background: #f8f9fa; padding: 10px; min-height: 200px; color: black;"></pre>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function runExercise() {
+    const code = document.getElementById('exercise-code').value;
+    fetch('/run_code', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({code: code})
+    })
+    .then(response => response.json())
+    .then(data => {
+        document.getElementById('output').textContent = data.success ? data.output : data.error;
+    });
+}
+
+
+
+function showHint() {
+    fetch('/get_solution/{{ lesson[0] }}')
+    .then(response => response.json())
+    .then(data => {
+        if (data.explanation) {
+            document.getElementById('hint-text').textContent = data.explanation;
+            document.getElementById('hint-section').style.display = 'block';
+        } else {
+            alert('Chưa có gợi ý cho bài này');
+        }
+    });
+}
+
+function hideHint() {
+    document.getElementById('hint-section').style.display = 'none';
+}
+
+function showSolution() {
+    fetch('/get_solution/{{ lesson[0] }}')
+    .then(response => response.json())
+    .then(data => {
+        if (data.solution) {
+            document.getElementById('solution-code').textContent = data.solution;
+            document.getElementById('solution-section').style.display = 'block';
+        } else {
+            alert('Chưa có lời giải cho bài này');
+        }
+    });
+}
+
+function hideSolution() {
+    document.getElementById('solution-section').style.display = 'none';
+}
+</script>
+{% endblock %}

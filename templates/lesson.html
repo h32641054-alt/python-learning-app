@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+
+{% block title %}{{ lesson.title }} - Python Learning{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h2>{{ lesson.title }}</h2>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb mb-0">
+                        <li class="breadcrumb-item"><a href="{{ url_for('home') }}">Trang chủ</a></li>
+                        <li class="breadcrumb-item"><a href="{{ url_for('course') }}">Khóa học</a></li>
+                        <li class="breadcrumb-item active">{{ lesson.title }}</li>
+                    </ol>
+                </nav>
+            </div>
+            <div class="card-body">
+                <div class="lesson-content">
+                    {{ lesson.content | safe }}
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h4>💻 Thực hành</h4>
+            </div>
+            <div class="card-body">
+                <p>Hãy thử chạy đoạn code này:</p>
+                <textarea id="exercise-code" class="form-control mb-3" rows="6">{{ lesson.exercise }}</textarea>
+                <button onclick="runExercise()" class="btn btn-success mb-3">▶️ Chạy code</button>
+                <div id="exercise-output" class="bg-dark text-light p-3 rounded" style="min-height: 100px; font-family: monospace;">
+                    Kết quả sẽ hiển thị ở đây...
+                </div>
+            </div>
+        </div>
+        
+        <div class="card mt-3">
+            <div class="card-header">
+                <h4>🎯 Mục tiêu bài học</h4>
+            </div>
+            <div class="card-body">
+                <ul>
+                    <li>Hiểu khái niệm cơ bản</li>
+                    <li>Thực hành với ví dụ</li>
+                    <li>Áp dụng vào bài tập</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="mt-4">
+    <a href="{{ url_for('course') }}" class="btn btn-secondary">← Quay lại khóa học</a>
+    <a href="{{ url_for('practice') }}" class="btn btn-primary">Thực hành thêm →</a>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function runExercise() {
+    const code = document.getElementById('exercise-code').value;
+    const output = document.getElementById('exercise-output');
+    
+    output.innerHTML = 'Đang chạy...';
+    
+    fetch('/run_code', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({code: code})
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            output.innerHTML = data.output || 'Code chạy thành công (không có output)';
+        } else {
+            output.innerHTML = `<span style="color: #ff6b6b;">Lỗi: ${data.error}</span>`;
+        }
+    })
+    .catch(error => {
+        output.innerHTML = `<span style="color: #ff6b6b;">Lỗi kết nối: ${error}</span>`;
+    });
+}
+</script>
+{% endblock %}

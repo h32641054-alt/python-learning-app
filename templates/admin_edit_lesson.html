@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block title %}Chỉnh sửa bài học{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>✏️ Chỉnh sửa bài học</h2>
+    
+    <form method="POST">
+        <div class="mb-3">
+            <label class="form-label">Tiêu đề bài học</label>
+            <input type="text" name="title" class="form-control" value="{{ lesson[1] }}" required>
+        </div>
+        
+        <div class="mb-3">
+            <label class="form-label">Nội dung khóa học</label>
+            <textarea name="content" class="form-control" rows="5" required>{{ lesson[2] }}</textarea>
+        </div>
+        
+        <div class="mb-3">
+            <label class="form-label">Code mẫu</label>
+            <textarea name="code_example" class="form-control" rows="4">{{ lesson[3] or '' }}</textarea>
+        </div>
+        
+        <div class="mb-3">
+            <label class="form-label">Bài tập</label>
+            <textarea name="exercise" class="form-control" rows="3">{{ lesson[4] or '' }}</textarea>
+        </div>
+        
+        <div class="mb-3">
+            <label class="form-label">Video URL</label>
+            <input type="url" name="video_url" class="form-control" value="{{ lesson[5] or '' }}">
+        </div>
+        
+        <button type="submit" class="btn btn-primary">Cập nhật</button>
+        <a href="{{ url_for('lessons') }}" class="btn btn-secondary">Hủy</a>
+    </form>
+</div>
+{% endblock %}

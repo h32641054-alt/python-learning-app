@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+
+{% block title %}{{ lesson[1] }}{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>{{ lesson[1] }}</h2>
+    <small class="text-muted">Bởi {{ lesson[6] }} - {{ lesson[7][:10] }}</small>
+    
+    <div class="row mt-4">
+        <div class="col-md-8">
+            <!-- Video nếu có -->
+            {% if lesson[5] %}
+            <div class="mb-4">
+                <iframe width="100%" height="315" src="{{ lesson[5] }}" frameborder="0" allowfullscreen></iframe>
+            </div>
+            {% endif %}
+            
+            <!-- Nội dung bài học -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5>Nội dung bài học</h5>
+                </div>
+                <div class="card-body">
+                    <p>{{ lesson[2] }}</p>
+                </div>
+            </div>
+            
+            <!-- Code mẫu -->
+            {% if lesson[3] %}
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5>Code mẫu</h5>
+                </div>
+                <div class="card-body">
+                    <pre><code>{{ lesson[3] }}</code></pre>
+                    <button class="btn btn-sm btn-success" onclick="runCode('{{ lesson[3] }}')">Chạy code</button>
+                </div>
+            </div>
+            {% endif %}
+            
+            <!-- Nút bài tập -->
+            {% if lesson[4] %}
+            <div class="text-center mb-4">
+                <a href="{{ url_for('exercise_page', lesson_id=lesson[0]) }}" class="btn btn-success btn-lg">Bài tập</a>
+            </div>
+            {% endif %}
+        </div>
+        
+        <div class="col-md-4">
+            <!-- Kết quả chạy code -->
+            <div class="card">
+                <div class="card-header">
+                    <h6>Kết quả</h6>
+                </div>
+                <div class="card-body">
+                    <pre id="output" style="background: #f8f9fa; padding: 10px; min-height: 100px; color: black;"></pre>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function runCode(code) {
+    fetch('/run_code', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({code: code})
+    })
+    .then(response => response.json())
+    .then(data => {
+        document.getElementById('output').textContent = data.success ? data.output : data.error;
+    });
+}
+
+
+</script>
+{% endblock %}

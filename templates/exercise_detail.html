@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block title %}{{ exercise.title }} - Python Learning{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h3>{{ exercise[1] }}</h3>
+                <span class="badge bg-primary">Bài tập</span>
+            </div>
+            <div class="card-body">
+                <div class="exercise-content">
+                    {{ exercise[2] | replace('\n', '<br>') | safe }}
+                </div>
+                
+                <div class="mt-3">
+                    <a href="{{ url_for('exercises') }}" class="btn btn-secondary btn-sm">← Quay lại</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h4>💻 Thực hành</h4>
+            </div>
+            <div class="card-body">
+                <textarea id="exercise-code" class="form-control mb-3" rows="12" placeholder="# Viết code Python của bạn ở đây\nprint('Hello Python!')"></textarea>
+                <button onclick="runExercise()" class="btn btn-success mb-3">▶️ Chạy code</button>
+                <div id="exercise-output" class="bg-dark text-light p-3 rounded" style="min-height: 150px; font-family: monospace;">
+                    Kết quả sẽ hiển thị ở đây...
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function runExercise() {
+    const code = document.getElementById('exercise-code').value;
+    const output = document.getElementById('exercise-output');
+    
+    output.innerHTML = 'Đang chạy...';
+    
+    fetch('/run_code', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({code: code})
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            output.innerHTML = data.output || 'Code chạy thành công (không có output)';
+        } else {
+            output.innerHTML = `<span style="color: #ff6b6b;">Lỗi: ${data.error}</span>`;
+        }
+    })
+    .catch(error => {
+        output.innerHTML = `<span style="color: #ff6b6b;">Lỗi kết nối: ${error}</span>`;
+    });
+}
+
+
+</script>
+{% endblock %}

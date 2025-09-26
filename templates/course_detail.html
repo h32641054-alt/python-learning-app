@@ -1,0 +1,261 @@
+{% extends "base.html" %}
+
+{% block title %}{{ course[1] }} - Python Learning{% endblock %}
+
+{% block content %}
+<div class="course-detail-container">
+    <div class="space-bg">
+        <div class="floating-elements-small">
+            <div class="mini-planet planet-a"></div>
+            <div class="mini-planet planet-b"></div>
+            <div class="mini-asteroid"></div>
+        </div>
+    </div>
+    
+    <div class="container">
+        <div class="row">
+            <div class="col-12 mb-4">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="{{ url_for('home') }}">🏠 Trang chủ</a></li>
+                        <li class="breadcrumb-item"><a href="{{ url_for('course') }}">📚 Khóa học</a></li>
+                        <li class="breadcrumb-item active">{{ course[1] }}</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+        
+        <div class="row">
+            {% if course[6] %}
+            <div class="col-lg-8 mb-4">
+                <div class="card video-card">
+                    <div class="video-wrapper">
+                        <iframe src="{{ course[6] }}" frameborder="0" allowfullscreen></iframe>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+            {% else %}
+            <div class="col-12">
+            {% endif %}
+                <div class="card course-info-card">
+                    <div class="card-header">
+                        <h1 class="course-title">🚀 {{ course[1] }}</h1>
+                    </div>
+                    <div class="card-body">
+                        <div class="course-meta mb-4">
+                            <div class="meta-item">
+                                <span class="meta-label">👨‍💻 Giảng viên:</span>
+                                <span class="meta-value">{{ course[3] }}</span>
+                            </div>
+                            <div class="meta-item">
+                                <span class="meta-label">📅 Ngày tạo:</span>
+                                <span class="meta-value">{{ course[4][:10] }}</span>
+                            </div>
+                            {% if course[6] %}
+                            <div class="meta-item">
+                                <span class="meta-label">🎥 Định dạng:</span>
+                                <span class="meta-value">Video + Text</span>
+                            </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="course-description">
+                            <h5>📖 Mô tả khóa học</h5>
+                            <div class="description-content">
+                                {{ course[2] | replace('\n', '<br>') | safe }}
+                            </div>
+                        </div>
+                        
+                        <div class="course-actions mt-4">
+                            <a href="{{ url_for('practice') }}" class="btn btn-primary btn-lg w-100 mb-2">
+                                💻 Thực hành ngay
+                            </a>
+                            <a href="{{ url_for('exercises') }}" class="btn btn-outline-primary btn-lg w-100">
+                                🎯 Làm bài tập
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        {% if not course[6] %}
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card content-card">
+                    <div class="card-body">
+                        <div class="course-content">
+                            {{ course[2] | replace('\n', '<br>') | safe }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<style>
+.course-detail-container {
+    min-height: 80vh;
+    position: relative;
+}
+
+.space-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(13, 17, 23, 0.1), rgba(48, 105, 152, 0.05));
+    pointer-events: none;
+}
+
+.floating-elements-small {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+.mini-planet {
+    position: absolute;
+    border-radius: 50%;
+    animation: miniFloat 6s ease-in-out infinite;
+}
+
+.planet-a {
+    width: 40px;
+    height: 40px;
+    top: 20%;
+    right: 10%;
+    background: radial-gradient(circle at 30% 30%, #3498db, #2980b9);
+    box-shadow: 0 0 20px rgba(52, 152, 219, 0.3);
+}
+
+.planet-b {
+    width: 30px;
+    height: 30px;
+    top: 70%;
+    left: 15%;
+    background: radial-gradient(circle at 40% 40%, #e74c3c, #c0392b);
+    box-shadow: 0 0 15px rgba(231, 76, 60, 0.3);
+    animation-delay: -2s;
+}
+
+.mini-asteroid {
+    width: 20px;
+    height: 15px;
+    top: 50%;
+    right: 30%;
+    background: #7f8c8d;
+    border-radius: 30% 70% 70% 30%;
+    animation: miniRotate 4s linear infinite;
+}
+
+@keyframes miniFloat {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-15px); }
+}
+
+@keyframes miniRotate {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.video-card {
+    background: var(--bg-card);
+    border: 2px solid var(--python-yellow);
+    border-radius: 15px;
+    overflow: hidden;
+}
+
+.video-wrapper {
+    position: relative;
+    padding-bottom: 56.25%;
+    height: 0;
+    overflow: hidden;
+}
+
+.video-wrapper iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.course-info-card {
+    background: var(--bg-card);
+    border: 2px solid var(--python-blue);
+    border-radius: 15px;
+    height: fit-content;
+}
+
+.course-title {
+    color: var(--python-yellow);
+    margin: 0;
+    font-size: 1.5rem;
+}
+
+.course-meta {
+    background: rgba(255, 212, 59, 0.1);
+    padding: 15px;
+    border-radius: 10px;
+    border: 1px solid rgba(255, 212, 59, 0.3);
+}
+
+.meta-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+}
+
+.meta-label {
+    font-weight: 600;
+    color: var(--python-yellow);
+}
+
+.meta-value {
+    color: var(--text-light);
+}
+
+.description-content {
+    background: rgba(48, 105, 152, 0.1);
+    padding: 15px;
+    border-radius: 10px;
+    border-left: 4px solid var(--python-blue);
+    color: var(--text-light);
+    line-height: 1.6;
+}
+
+.content-card {
+    background: var(--bg-card);
+    border: 2px solid var(--python-green);
+    border-radius: 15px;
+}
+
+.course-content {
+    color: var(--text-light);
+    line-height: 1.8;
+    font-size: 1.1rem;
+}
+
+.breadcrumb {
+    background: rgba(255, 212, 59, 0.1);
+    border-radius: 10px;
+    padding: 10px 15px;
+}
+
+.breadcrumb-item a {
+    color: var(--python-yellow);
+    text-decoration: none;
+}
+
+.breadcrumb-item.active {
+    color: var(--text-light);
+}
+</style>
+{% endblock %}

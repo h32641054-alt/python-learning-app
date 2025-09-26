@@ -1,0 +1,124 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- Hero Section -->
+<div class="hero-section">
+    <div class="space-elements">
+        <div class="floating-planet planet-1"></div>
+        <div class="floating-planet planet-2"></div>
+        <div class="floating-ufo ufo-1"></div>
+        <div class="shooting-star star-1"></div>
+        <div class="python-code-float code-float-1">print("Hello Python!")</div>
+        <div class="python-logo-float"></div>
+    </div>
+    
+    <div class="container">
+        <div class="row align-items-center min-vh-75">
+            <div class="col-lg-6">
+                <h1 class="hero-title">Học Python trong vũ trụ 🚀</h1>
+                <p class="hero-subtitle">Khám phá vũ trụ lập trình với AI và Space Technology</p>
+                <div class="hero-features mb-4">
+                    <div class="feature-item">🌌 Học miễn phí</div>
+                    <div class="feature-item">💻 Code trực tuyến</div>
+                    <div class="feature-item">🤖 AI hỗ trợ</div>
+                    <div class="feature-item">🌌 Cộng đồng</div>
+                </div>
+                <div class="hero-buttons">
+                    {% if not session.username %}
+                    <a href="{{ url_for('auth') }}" class="btn btn-primary btn-lg me-3">🌟 Tham gia ngay</a>
+                    {% else %}
+                    <a href="{{ url_for('lessons') }}" class="btn btn-primary btn-lg me-3">📚 Khóa học</a>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="hero-image">
+                    <div class="code-preview">
+                        <div class="code-header">
+                            <span class="dot red"></span>
+                            <span class="dot yellow"></span>
+                            <span class="dot green"></span>
+                            <span class="filename">🚀 main.py</span>
+                        </div>
+                        <div class="code-content">
+<pre><code class="language-python"># 🌌 Python Space Learning
+print("🚀 Welcome to Python")
+
+# Khám phá các hành tinh lập trình
+planets = ["🌍 Trái Đất", "⭐ Ngôi Sao"]
+for planet in planets:
+    print(f"Khám phá: {planet}")</code></pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Features Section -->
+<section class="features-section">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="section-title">Nền tảng học Python</h2>
+        </div>
+        
+        <div class="row g-4">
+            <div class="col-lg-3 col-md-6">
+                <div class="feature-card">
+                    <div class="feature-icon">📚</div>
+                    <h4>Khóa học + Bài tập</h4>
+                    <p>Nội dung khóa học và bài tập</p>
+                    <div class="feature-badge free">MIỄN PHÍ</div>
+                </div>
+            </div>
+            
+            <div class="col-lg-3 col-md-6">
+                <div class="feature-card">
+                    <div class="feature-icon">💻</div>
+                    <h4>Thực hành</h4>
+                    <p>Code editor trực tuyến và bài tập</p>
+                    <div class="feature-badge free">MIỄN PHÍ</div>
+                </div>
+            </div>
+            
+            <div class="col-lg-3 col-md-6">
+                <div class="feature-card premium">
+                    <div class="feature-icon">👥</div>
+                    <h4>Cộng đồng</h4>
+                    <p>Hỏi đáp và chia sẻ</p>
+                    <div class="feature-badge premium">ĐĂNG KÝ</div>
+                </div>
+            </div>
+            
+            <div class="col-lg-3 col-md-6">
+                <div class="feature-card premium">
+                    <div class="feature-icon">🤖</div>
+                    <h4>AI Trợ lý</h4>
+                    <p>Hỗ trợ học tập 24/7</p>
+                    <div class="feature-badge premium">ĐĂNG KÝ</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+
+<!-- CTA Section -->
+<section class="cta-section">
+    <div class="container text-center">
+        <h2 class="cta-title">Bắt đầu hành trình Python 🚀</h2>
+        <p class="cta-subtitle">Khám phá thế giới lập trình thôi nàooo!</p>
+        <div class="cta-buttons">
+            <a href="{{ url_for('lessons') }}" class="btn btn-primary btn-lg me-3">📚 Khóa học</a>
+            {% if not session.username %}
+            <a href="{{ url_for('auth') }}" class="btn btn-outline-light btn-lg">🌟 Tham gia ngay</a>
+            {% else %}
+            <a href="{{ url_for('lessons') }}" class="btn btn-outline-light btn-lg">🎯 Bài tập</a>
+            {% endif %}
+        </div>
+    </div>
+</section>
+{% endblock %}

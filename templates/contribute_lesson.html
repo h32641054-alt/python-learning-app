@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block title %}Đóng góp bài học{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>📝 Đóng góp bài học (Khóa học + Bài tập)</h2>
+    
+    <form method="POST">
+        <div class="mb-3">
+            <label class="form-label">Tiêu đề bài học</label>
+            <input type="text" name="title" class="form-control" required>
+        </div>
+        
+        <hr><h4>📚 PHẦN KHÓA HỌC</h4><hr>
+        
+        <div class="mb-3">
+            <label class="form-label">Nội dung khóa học</label>
+            <textarea name="content" class="form-control" rows="5" required></textarea>
+        </div>
+        
+        <div class="mb-3">
+            <label class="form-label">Video URL YouTube</label>
+            <input type="url" name="video_url" class="form-control">
+        </div>
+        
+        <div class="mb-3">
+            <label class="form-label">Code mẫu</label>
+            <textarea name="code_example" class="form-control" rows="4" required></textarea>
+        </div>
+        
+        <hr><h4>🎯 PHẦN BÀI TẬP</h4><hr>
+        
+        <div class="mb-3">
+            <label class="form-label">Tên bài tập</label>
+            <textarea name="exercise" class="form-control" rows="3" required></textarea>
+        </div>
+        
+        <div class="mb-3">
+            <label class="form-label">Lời giải</label>
+            <textarea name="solution_code" class="form-control" rows="4" required></textarea>
+        </div>
+        
+        <div class="mb-3">
+            <label class="form-label">Gợi ý</label>
+            <textarea name="solution_explanation" class="form-control" rows="3" required></textarea>
+        </div>
+        
+        <button type="submit" class="btn btn-success">Gửi đóng góp</button>
+        <a href="{{ url_for('lessons') }}" class="btn btn-secondary">Hủy</a>
+    </form>
+</div>
+{% endblock %}

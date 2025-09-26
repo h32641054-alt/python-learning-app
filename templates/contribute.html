@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block title %}Đóng góp{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Đóng góp nội dung</h2>
+    
+    <form method="POST">
+        <div class="mb-3">
+            <label class="form-label">Loại nội dung</label>
+            <select name="type" class="form-control" onchange="toggleFields()" id="contentType">
+                <option value="lesson">Bài học (Khóa học + Bài tập)</option>
+                <option value="blog">Blog</option>
+            </select>
+        </div>
+        
+        <div class="mb-3">
+            <label class="form-label">Tiêu đề</label>
+            <input type="text" name="title" class="form-control" required>
+        </div>
+        
+        <div class="mb-3">
+            <label class="form-label">Nội dung</label>
+            <textarea name="content" class="form-control" rows="5" required></textarea>
+        </div>
+        
+        <div id="lessonFields">
+            <div class="mb-3">
+                <label class="form-label">Code mẫu</label>
+                <textarea name="code_example" class="form-control" rows="4" placeholder="print('Hello World')"></textarea>
+            </div>
+            
+            <div class="mb-3">
+                <label class="form-label">Bài tập</label>
+                <textarea name="exercise" class="form-control" rows="3" placeholder="Viết chương trình in ra 'Hello Python'"></textarea>
+            </div>
+            
+            <div class="mb-3">
+                <label class="form-label">Video URL (tùy chọn)</label>
+                <input type="url" name="video_url" class="form-control" placeholder="https://www.youtube.com/embed/...">
+            </div>
+        </div>
+        
+        <button type="submit" class="btn btn-success">Đăng</button>
+    </form>
+</div>
+
+<script>
+function toggleFields() {
+    const type = document.getElementById('contentType').value;
+    const lessonFields = document.getElementById('lessonFields');
+    lessonFields.style.display = type === 'lesson' ? 'block' : 'none';
+}
+</script>
+{% endblock %}

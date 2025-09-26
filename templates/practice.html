@@ -1,0 +1,186 @@
+{% extends "base.html" %}
+
+{% block title %}Thực hành Python - Python Learning{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <h1 class="mb-4">💻 Thực hành Python</h1>
+        <p class="lead">Viết và chạy code Python ngay trên trình duyệt</p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h4>📝 Code Editor</h4>
+                <div>
+                    <button onclick="clearCode()" class="btn btn-sm btn-outline-secondary">Xóa</button>
+                    <button onclick="loadExample()" class="btn btn-sm btn-outline-info">Ví dụ</button>
+                </div>
+            </div>
+            <div class="card-body p-0">
+                <textarea id="code-editor" class="form-control border-0" rows="20" placeholder="# Viết code Python của bạn ở đây
+print('Xin chào Python!')
+
+# Ví dụ: Tính tổng hai số
+a = 10
+b = 20
+tong = a + b
+print(f'Tổng của {a} và {b} là: {tong}')">print('Xin chào Python!')
+
+# Ví dụ: Tính tổng hai số
+a = 10
+b = 20
+tong = a + b
+print(f'Tổng của {a} và {b} là: {tong}')</textarea>
+            </div>
+            <div class="card-footer">
+                <button onclick="runCode()" class="btn btn-success">▶️ Chạy code</button>
+                <small class="text-muted ms-3">Nhấn Ctrl+Enter để chạy nhanh</small>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h4>📺 Kết quả</h4>
+            </div>
+            <div class="card-body">
+                <div id="output" class="bg-dark text-light p-3 rounded" style="min-height: 400px; font-family: monospace; white-space: pre-wrap;">
+Kết quả sẽ hiển thị ở đây...
+
+Hãy viết code Python và nhấn "Chạy code" để xem kết quả!
+                </div>
+            </div>
+        </div>
+        
+        <div class="card mt-3">
+            <div class="card-header">
+                <h5>💡 Gợi ý bài tập</h5>
+            </div>
+            <div class="card-body">
+                <div class="list-group list-group-flush">
+                    <button class="list-group-item list-group-item-action" onclick="loadExercise(1)">
+                        1. In ra "Hello World"
+                    </button>
+                    <button class="list-group-item list-group-item-action" onclick="loadExercise(2)">
+                        2. Tính diện tích hình chữ nhật
+                    </button>
+                    <button class="list-group-item list-group-item-action" onclick="loadExercise(3)">
+                        3. Kiểm tra số chẵn lẻ
+                    </button>
+                    <button class="list-group-item list-group-item-action" onclick="loadExercise(4)">
+                        4. Vòng lặp in số từ 1 đến 10
+                    </button>
+                    <button class="list-group-item list-group-item-action" onclick="loadExercise(5)">
+                        5. Tính giai thừa
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function runCode() {
+    const code = document.getElementById('code-editor').value;
+    const output = document.getElementById('output');
+    
+    output.innerHTML = 'Đang chạy code...';
+    
+    fetch('/run_code', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({code: code})
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            output.innerHTML = data.output || 'Code chạy thành công (không có output)';
+        } else {
+            output.innerHTML = `❌ Lỗi:\n${data.error}`;
+        }
+    })
+    .catch(error => {
+        output.innerHTML = `❌ Lỗi kết nối: ${error}`;
+    });
+}
+
+function clearCode() {
+    document.getElementById('code-editor').value = '';
+    document.getElementById('output').innerHTML = 'Code đã được xóa. Hãy viết code mới!';
+}
+
+function loadExample() {
+    const example = `# Ví dụ: Chương trình quản lý danh sách học sinh
+students = []
+
+def add_student(name, age):
+    student = {"name": name, "age": age}
+    students.append(student)
+    print(f"Đã thêm học sinh: {name}")
+
+def show_students():
+    print("\\nDanh sách học sinh:")
+    for i, student in enumerate(students, 1):
+        print(f"{i}. {student['name']} - {student['age']} tuổi")
+
+# Thêm một số học sinh
+add_student("Nguyễn Văn A", 20)
+add_student("Trần Thị B", 19)
+add_student("Lê Văn C", 21)
+
+# Hiển thị danh sách
+show_students()`;
+    
+    document.getElementById('code-editor').value = example;
+}
+
+function loadExercise(num) {
+    const exercises = {
+        1: '# Bài tập 1: In ra "Hello World"\nprint("Hello World")',
+        2: `# Bài tập 2: Tính diện tích hình chữ nhật
+length = 5
+width = 3
+area = length * width
+print(f"Diện tích hình chữ nhật: {area}")`,
+        3: `# Bài tập 3: Kiểm tra số chẵn lẻ
+number = 15
+if number % 2 == 0:
+    print(f"{number} là số chẵn")
+else:
+    print(f"{number} là số lẻ")`,
+        4: `# Bài tập 4: Vòng lặp in số từ 1 đến 10
+for i in range(1, 11):
+    print(f"Số: {i}")`,
+        5: `# Bài tập 5: Tính giai thừa
+def factorial(n):
+    if n == 0 or n == 1:
+        return 1
+    else:
+        return n * factorial(n - 1)
+
+number = 5
+result = factorial(number)
+print(f"Giai thừa của {number} là: {result}")`
+    };
+    
+    document.getElementById('code-editor').value = exercises[num];
+}
+
+// Shortcut Ctrl+Enter để chạy code
+document.getElementById('code-editor').addEventListener('keydown', function(e) {
+    if (e.ctrlKey && e.key === 'Enter') {
+        e.preventDefault();
+        runCode();
+    }
+});
+</script>
+{% endblock %}

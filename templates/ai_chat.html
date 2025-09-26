@@ -1,0 +1,157 @@
+{% extends "base.html" %}
+
+{% block title %}AI Trợ lý Python - Python Learning{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8 mx-auto">
+        <div class="card">
+            <div class="card-header bg-success text-white">
+                <h3>🤖 AI Trợ lý Python</h3>
+                <p class="mb-0">Hỏi bất kỳ câu hỏi nào về Python, tôi sẽ giúp bạn!</p>
+            </div>
+            <div class="card-body">
+                <div id="chat-messages" class="mb-3" style="height: 400px; overflow-y: auto; border: 1px solid #dee2e6; padding: 15px; border-radius: 5px;">
+                    <div class="message ai-message" style="color: #000000;">
+                        <strong style="color: #000000;">🤖 AI:</strong> <span style="color: #000000;">Xin chào! Tôi là trợ lý AI của Python Learning. Tôi có thể giúp bạn:
+                        <ul style="color: #000000;">
+                            <li>Giải thích các khái niệm Python</li>
+                            <li>Debug code</li>
+                            <li>Gợi ý cách giải bài tập</li>
+                            <li>Trả lời câu hỏi về lập trình</li>
+                        </ul>
+                        Hãy hỏi tôi bất kỳ điều gì về Python!</span>
+                    </div>
+                </div>
+                
+                <div class="input-group">
+                    <input type="text" id="user-input" class="form-control" placeholder="Nhập câu hỏi của bạn..." onkeypress="handleKeyPress(event)">
+                    <button class="btn btn-success" onclick="sendMessage()">Gửi</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row mt-4">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>💡 Câu hỏi gợi ý</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="list-group list-group-flush">
+                            <button class="list-group-item list-group-item-action" onclick="askQuestion('Python là gì?')">
+                                Python là gì?
+                            </button>
+                            <button class="list-group-item list-group-item-action" onclick="askQuestion('Biến trong Python')">
+                                Biến trong Python hoạt động như thế nào?
+                            </button>
+                            <button class="list-group-item list-group-item-action" onclick="askQuestion('Vòng lặp for')">
+                                Cách sử dụng vòng lặp for
+                            </button>
+                            <button class="list-group-item list-group-item-action" onclick="askQuestion('Hàm trong Python')">
+                                Cách tạo hàm trong Python
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>🎯 Tips sử dụng AI</h5>
+                    </div>
+                    <div class="card-body">
+                        <ul>
+                            <li>Hỏi câu hỏi cụ thể và rõ ràng</li>
+                            <li>Chia sẻ code nếu cần debug</li>
+                            <li>Mô tả vấn đề bạn gặp phải</li>
+                            <li>Hỏi về best practices</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function sendMessage() {
+    const input = document.getElementById('user-input');
+    const sendBtn = document.querySelector('.btn-success');
+    const message = input.value.trim();
+    
+    if (!message) return;
+    
+    // Disable button and show loading
+    sendBtn.disabled = true;
+    sendBtn.classList.add('loading');
+    sendBtn.textContent = 'Đang gửi...';
+    
+    // Hiển thị tin nhắn người dùng
+    addMessage('user', message);
+    input.value = '';
+    
+    // Gửi tin nhắn đến AI
+    fetch('/chat', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({message: message})
+    })
+    .then(response => response.json())
+    .then(data => {
+        addMessage('ai', data.response);
+    })
+    .catch(error => {
+        addMessage('ai', 'Xin lỗi, có lỗi xảy ra. Vui lòng thử lại!');
+    })
+    .finally(() => {
+        // Re-enable button
+        sendBtn.disabled = false;
+        sendBtn.classList.remove('loading');
+        sendBtn.textContent = 'Gửi';
+    });
+}
+
+function addMessage(sender, message) {
+    const chatMessages = document.getElementById('chat-messages');
+    const messageDiv = document.createElement('div');
+    messageDiv.className = `message ${sender}-message mb-3`;
+    
+    if (sender === 'user') {
+        messageDiv.innerHTML = `<strong style="color: #000000;">👤 Bạn:</strong> <span style="color: #000000;">${message}</span>`;
+        messageDiv.style.textAlign = 'right';
+        messageDiv.style.backgroundColor = '#e3f2fd';
+        messageDiv.style.padding = '10px';
+        messageDiv.style.borderRadius = '10px';
+        messageDiv.style.marginLeft = '20%';
+        messageDiv.style.color = '#000000';
+    } else {
+        messageDiv.innerHTML = `<strong style="color: #000000;">🤖 AI:</strong> <span style="color: #000000;">${message}</span>`;
+        messageDiv.style.backgroundColor = '#f1f8e9';
+        messageDiv.style.padding = '10px';
+        messageDiv.style.borderRadius = '10px';
+        messageDiv.style.marginRight = '20%';
+        messageDiv.style.color = '#000000';
+    }
+    
+    chatMessages.appendChild(messageDiv);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
+function handleKeyPress(event) {
+    if (event.key === 'Enter') {
+        sendMessage();
+    }
+}
+
+function askQuestion(question) {
+    document.getElementById('user-input').value = question;
+    sendMessage();
+}
+</script>
+{% endblock %}

@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}Xem đóng góp khóa học{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>👀 Xem đóng góp khóa học</h2>
+    
+    {% for contribution in contributions %}
+    <div class="card mb-3 border-warning">
+        <div class="card-body">
+            <h5 class="card-title">{{ contribution[1] }} <span class="badge bg-warning">Chờ duyệt</span></h5>
+            <p class="card-text">{{ contribution[2][:200] }}...</p>
+            <small class="text-muted">Bởi {{ contribution[6] }} - {{ contribution[7][:10] }}</small>
+            <br><br>
+            <a href="{{ url_for('approve_lesson', lesson_id=contribution[0]) }}" class="btn btn-success">Duyệt</a>
+            <a href="{{ url_for('reject_lesson', lesson_id=contribution[0]) }}" class="btn btn-danger">Từ chối</a>
+        </div>
+    </div>
+    {% endfor %}
+    
+    <a href="{{ url_for('courses') }}" class="btn btn-secondary">Quay lại</a>
+</div>
+{% endblock %}

@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}Học Python{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Học Python</h2>
+    <p>Khóa học, bài tập và code mẫu tất cả trong một</p>
+    
+    <div class="row">
+        {% for lesson in lessons %}
+        <div class="col-md-6 mb-4">
+            <div class="card {% if lesson[8] == 'pending' %}border-warning{% elif lesson[8] == 'rejected' %}border-danger{% endif %}">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        {{ lesson[1] }}
+                        {% if lesson[8] == 'pending' %}<span class="badge bg-warning">Chờ duyệt</span>{% endif %}
+                        {% if lesson[8] == 'rejected' %}<span class="badge bg-danger">Bị từ chối</span>{% endif %}
+                    </h5>
+                    <p class="card-text">{{ lesson[2][:100] }}...</p>
+                    <small class="text-muted">Bởi {{ lesson[6] }} - {{ lesson[7][:10] }}</small>
+                    <br><br>
+                    <a href="{{ url_for('lesson_detail', lesson_id=lesson[0]) }}" class="btn btn-primary">Học ngay</a>
+                    
+                    {% if session.username == 'admin' and lesson[8] == 'pending' %}
+                    <a href="{{ url_for('approve_lesson', lesson_id=lesson[0]) }}" class="btn btn-success btn-sm ms-2">Duyệt</a>
+                    <a href="{{ url_for('reject_lesson', lesson_id=lesson[0]) }}" class="btn btn-danger btn-sm">Từ chối</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

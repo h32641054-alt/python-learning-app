@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+
+{% block title %}Khóa học Python - Python Learning{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h1 class="mb-2 python-text">📚 Khóa học Python - Học & Thực hành</h1>
+                <p class="lead mb-0">Khóa học chất lượng kết hợp học lý thuyết, làm bài tập và viết code</p>
+            </div>
+            {% if session.username %}
+            <div>
+                <a href="{{ url_for('contribute_course') }}" class="btn btn-success">
+                    📝 Đóng góp khóa học
+                </a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    {% if courses %}
+        {% for course in courses %}
+        <div class="col-lg-4 mb-4">
+            <div class="card course-card">
+                {% if course[6] %}
+                <div class="video-container">
+                    <iframe src="{{ course[6] }}" frameborder="0" allowfullscreen></iframe>
+                </div>
+                {% endif %}
+                <div class="card-body">
+                    <h4 class="card-title python-text">🚀 {{ course[1] }}</h4>
+                    <p class="card-text">{{ course[2][:150] }}{% if course[2]|length > 150 %}...{% endif %}</p>
+                    <div class="course-meta mb-3">
+                        <span class="badge bg-primary me-1">👨💻 {{ course[3] }}</span>
+                        {% if course[6] %}
+                        <span class="badge bg-warning">🎥 Video</span>
+                        {% endif %}
+                    </div>
+                    <div class="btn-group w-100" role="group">
+                        <a href="{{ url_for('course_detail', course_id=course[0]) }}" class="btn btn-primary">📚 Học</a>
+                        <a href="{{ url_for('practice') }}" class="btn btn-success">💻 Code</a>
+                        <a href="{{ url_for('exercises') }}" class="btn btn-warning">🎯 Bài tập</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    {% else %}
+        <div class="col-12">
+            <div class="text-center py-5">
+                <h3 class="python-text">Chưa có khóa học nào</h3>
+                <p>Hãy đóng góp khóa học đầu tiên hoặc thử các tính năng khác!</p>
+                <div class="d-flex gap-3 justify-content-center flex-wrap">
+                    {% if session.username %}
+                    <a href="{{ url_for('contribute_course') }}" class="btn btn-primary">📝 Đóng góp khóa học</a>
+                    {% endif %}
+                    <a href="{{ url_for('practice') }}" class="btn btn-success">💻 Thử code</a>
+                    <a href="{{ url_for('exercises') }}" class="btn btn-warning">🎯 Bài tập</a>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+</div>
+
+{% if courses %}
+<div class="mt-5 p-4 bg-info text-white rounded">
+    <h3>💡 Quy trình học tập hiệu quả</h3>
+    <div class="row">
+        <div class="col-md-4">
+            <h5>1️⃣ Học lý thuyết</h5>
+            <p>Đọc bài học và xem video</p>
+        </div>
+        <div class="col-md-4">
+            <h5>2️⃣ Thực hành code</h5>
+            <p>Viết code theo ví dụ</p>
+        </div>
+        <div class="col-md-4">
+            <h5>3️⃣ Làm bài tập</h5>
+            <p>Kiểm tra kiến thức đã học</p>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

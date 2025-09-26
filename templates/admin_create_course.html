@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block title %}Tạo khóa học{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>📚 Tạo khóa học mới</h2>
+    
+    <form method="POST">
+        <div class="mb-3">
+            <label class="form-label">Tiêu đề khóa học</label>
+            <input type="text" name="title" class="form-control" required>
+        </div>
+        
+        <div class="mb-3">
+            <label class="form-label">Nội dung</label>
+            <textarea name="content" class="form-control" rows="5" required></textarea>
+        </div>
+        
+        <div class="mb-3">
+            <label class="form-label">Code mẫu</label>
+            <textarea name="code_example" class="form-control" rows="4"></textarea>
+        </div>
+        
+        <div class="mb-3">
+            <label class="form-label">Bài tập</label>
+            <textarea name="exercise" class="form-control" rows="3"></textarea>
+        </div>
+        
+        <div class="mb-3">
+            <label class="form-label">Video URL</label>
+            <input type="url" name="video_url" class="form-control">
+        </div>
+        
+        <button type="submit" class="btn btn-primary">Tạo khóa học</button>
+        <a href="{{ url_for('courses') }}" class="btn btn-secondary">Hủy</a>
+    </form>
+</div>
+{% endblock %}
